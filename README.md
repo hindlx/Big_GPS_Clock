@@ -1,4 +1,5 @@
 # Big_GPS_Clock
+
 Start of an build.
 Building of big clock. GPS syncronisation and MAX7219 7-segment driver.
 
@@ -7,4 +8,4 @@ Uses https://github.com/wayoda/LedControl to drive the 7-segments display.
 
 This is the start of the build.
 
-First .ino file is a POC and it has been running for one day without any hickups.
+First .ino file is a POC without any GPS-module and have been running for one day without any hickups.
