@@ -8,4 +8,5 @@ Uses https://github.com/wayoda/LedControl to drive the 7-segments display.
 
 This is the start of the build.
 
-First .ino file is a POC without any GPS-module and have been running for one day without any hickups.
+First .ino file is a POC without any GPS-module and have been running for several days without any hickups.
+
