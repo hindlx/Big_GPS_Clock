@@ -8,5 +8,7 @@ Uses https://github.com/wayoda/LedControl to drive the 7-segments display.
 
 This is the start of the build.
 
-First .ino file is a POC without any GPS-module and have been running for several days without any hickups.
+Test I: GPS_Clock.ino file is a POC without any GPS-module and it has been running for several days without any hickups.
+
+Test II: Test with RTC module. It isn't possible to set the RTC clock in current version.
 
