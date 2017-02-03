@@ -1,6 +1,6 @@
 /*
  * Big_GPS_Clock.ino
- * 2017-02-03 
+ * 2017-02-03 Version 1.01
  * Lars-Johan Lindh
  *      1          a
  *    -----      -----        -----      -----     --   --
@@ -17,7 +17,6 @@
  * 
  */
 
-
 // Dependensis / Librarys
 #include "avr/wdt.h"         // Built in watchdog
 
@@ -30,7 +29,7 @@ LedControl lc=LedControl(10,12,11,2);
 
 #include <Time.h>
 #include <AltSoftSerial.h>
-// Connect the GPS RX/TX to arduino pins 3 and 5
+// Connect the GPS RX/TX to arduino pins 8(RX) and 9(TX)
 AltSoftSerial serial ;
 
 const int     TZ  = 1;           // GPS time = UTC/GMT set TZ according to time zone
