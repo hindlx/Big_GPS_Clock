@@ -10,6 +10,15 @@ This is the start of the build.
 
 Test I: GPS_Clock.ino file is a POC without any GPS-module and it has been running for several days without any hickups.
 
-Test II: Test with RTC module. It isn't possible to set the RTC clock in current version.
 <img src="https://github.com/hindlx/Big_GPS_Clock/blob/master/IMG_0100.JPG">
+
+Test II: Test with GPS module. 
+
+<img src="https://github.com/hindlx/Big_GPS_Clock/blob/master/IMG_0133.JPG">
+
+Testing diffrent "difusors".
+
+<img src="https://github.com/hindlx/Big_GPS_Clock/blob/master/IMG_0125.JPG">
+
+
 
