@@ -5,6 +5,9 @@
  * Use MAX7219 one chip for displaying time and optional another for some status
  * messages.
  *
+ * Set TZ
+ * DST calculations are for Sweden
+ *
  *
  * Copyright (C) 2017 Lars-Johan Lindh
  *
@@ -51,12 +54,12 @@ LedControl lc = LedControl(10, 12, 11, 2);
 // Connect the GPS RX/TX to arduino pins 8 and 9
 AltSoftSerial serial ;
 
-#define Version "170222"         // Softvare version = releasedate
+#define Version "170223"         // Softvare version = releasedate
 
 const int     TZ  = 1;           // GPS time = UTC/GMT set TZ according to time zone
-int           DST = 0;           // Daylight Saving Time start variable set
+int           DST = 0;           // Daylight Saving Time start variable
 float         LightSensorValue;  // LDR-value
-int           DEBUG = 1;         // Prints time and date to serial port when DEBUG = 1
+boolean       DEBUG = 1;         // Prints time and date to serial port when DEBUG = 1
 
 time_t prevDisplay = 0;          // When the digital clock was displayed last
 
@@ -167,11 +170,7 @@ void setup() {
 void loop() {
   if ( processGPS() ) {
     setTime(pvt.hour, pvt.minute, pvt.second, pvt.day, pvt.month, pvt.year);
-    //    bitWrite(pvt.valid,0,0);                                                                // for testing
-    //    bitWrite(pvt.valid,1,0);                                                                // for testing
-    //    bitWrite(pvt.valid,2,0);                                                                // for testing
     adjustTime((TZ + DST) * SECS_PER_HOUR);
-
     if (timeStatus() != timeNotSet) {
       if (now() != prevDisplay) {                  // update the display only if the time has changed
         prevDisplay = now();
@@ -183,46 +182,24 @@ void loop() {
   }
 }
 
-/* Calculate when summertime
+/* Calculate when summertime in sweden
  * PARAMS:
  * RETURN: Return DST set to 0 or 1 */
 int calcDST() {
   if (month() > 3 and month() < 10) {              // Summer months 4,5,6,7,8,9
-    if (DEBUG == 1 ) {
-      Serial.print(" Summertime ");
-    }
     return 1;
   }
   if ( month() == 3 ) {
-    if ( ((day() * 24 * 60 * 60 + hour() * 60 * 60 + minute() * 60 + second()) < ((NthDate(year(), 3, 0, 1)) * 24 * 60 * 60 + 7200)) ) { // Spring DST ON
-      if (DEBUG == 1 ) {
-        Serial.print(" Wintertime mars ");
-      }
+    if ( ( (day() * 24 * 60 * 60UL) + (hour() * 60 * 60UL) + (minute() * 60UL) + second()) < (NthDate(year(),  3, 0, 1) * 24 * 60 * 60UL + 7200UL) ) { // Spring DST ON
       return 0;
     }
-    else {
-      if (DEBUG == 1 ) {
-        Serial.print(" Summertime mars ");
-      }
-      return 1;
-    }
+    else  return 1;
   }
   if ( month() == 10 ) {
-    if ( ((day() * 24 * 60 * 60 + hour() * 60 * 60 + minute() * 60 + second()) < ((NthDate(year(), 10, 0, 1)) * 24 * 60 * 60 + 7200)) ) { // Autumn DST OFF
-      if (DEBUG == 1 ) {
-        Serial.print(" Summertime october ");
-      }
+    if ( ( (day() * 24 * 60 * 60UL) + ((hour() - DST) * 60 * 60UL) + (minute() * 60UL) + second()) < (NthDate(year(), 10, 0, 1) * 24 * 60 * 60UL + 7200UL) )  { // Autumn DST OFF
       return 1;
     }
-    else {
-      if (DEBUG == 1 ) {
-        Serial.print(" Wintertime october ");
-      }
-      return 0;
-    }
-  }
-  if (DEBUG == 1 ) {
-    Serial.print(" Wintertime ");
+    else  return 0;
   }
   return 0;                                        // Winter months 1,2,11,12
 }
@@ -237,7 +214,8 @@ void digitalClockDisplay() {
   if ( bitRead(pvt.valid, 0) == 1 ) {              // Check if received time from GPS is okay, then show time
     WriteDisp(minute(), 0, 3);
     WriteDisp(hour(), 0, 5);
-  } else {
+  }
+  else {
     write_msg(0);                                   // write Err to display to indicate GPS time lost
   }
   if ( bitRead(pvt.valid, 2) == 1 ) {               // Check if valid time is received from GPS
@@ -265,23 +243,30 @@ void digitalClockDisplay() {
   lc.setIntensity(0, LightSensorValue);            // Set new brightness value display 1
   lc.setIntensity(1, LightSensorValue);            // Set new brightness value display 2
 
-  // write some stuff to a scondary display
+  // write some stuff to the secondary display
   WriteDisp(pvt.fixType, 1, 7);                    // Write GPS fix value
   WriteDisp(WeekDay(year(), month(), day()), 1, 4);// Write weekday number sun=0, sat=6
   WriteDisp(LightSensorValue, 1, 1);               // Write brightnes value
 
-  if (DEBUG == 1 ) {                               // display output on serial port if debug is set
+  if ( DEBUG ) {                               // display output on serial port if debug is set
     Serial.print(hour());
     Serial.print(":");
     printDigits(minute());
     Serial.print(":");
     printDigits(second());
-    Serial.print(" ");
+    Serial.print("  ");
     Serial.print(year());
     Serial.print("-");
     printDigits(month());
     Serial.print("-");
     printDigits(day());
+    Serial.print("  DST=");
+    if ( DST ) {
+      Serial.print("Summer");
+    }
+    else {
+      Serial.print("Winter");
+    }
     Serial.print("  GPS-fix: ");
     Serial.print(pvt.fixType);
     Serial.print("  SatInSight: ");
@@ -296,13 +281,19 @@ void digitalClockDisplay() {
     Serial.print(bitRead(pvt.valid, 2));
     Serial.print(bitRead(pvt.valid, 1));
     Serial.print(bitRead(pvt.valid, 0));
-    if ( bitRead(pvt.valid, 2) == 1 ) Serial.println(" Time Is Valid: ");
-    else if ( bitRead(pvt.valid, 1) == 1 ) Serial.println(" Time Is Okay: ");
-    else Serial.println(" Time Error : ");
+    if ( bitRead(pvt.valid, 2) == 1 ) {
+      Serial.println(" Time Is Valid: ");
+    }
+    else if ( bitRead(pvt.valid, 1) == 1 ) {
+      Serial.println(" Time Is Okay: ");
+    }
+    else {
+      Serial.println(" Time Error : ");
+    }
   }
 }
 
-/* Write data to 7-segment display
+/* Write 2-digit value to 7-segment display
  * PARAMS: value to display, display number, digit number
  * RETURN: - */
 void WriteDisp (int value, int disp, int dig) {
@@ -326,6 +317,9 @@ int WeekDay(int y, int m, int d) {
 }
 
 /* Calculate Nth last day in month where weekday is DOW in month where it is 31 days.
+ * This module calculates DST date for Sweden.
+ * Summertime from last sunday in mars 02:00 to last sunday in october 03:00
+ * https://www.timeanddate.com/time/change/sweden/stockholm
  * PARAMS: year, month, day of week, Nth occurence of that day from last day in month
  * RETURN: date */
 int NthDate(int y, int m, int DOW, int NthWeek) {
@@ -343,7 +337,9 @@ int NthDate(int y, int m, int DOW, int NthWeek) {
  * RETURN: - */
 void printDigits(int digits) {
   // utility function for digital clock display: prints preceding colon and leading 0
-  if (digits < 10) Serial.print('0');
+  if (digits < 10) {
+    Serial.print('0');
+  }
   Serial.print(digits);
 }
 
