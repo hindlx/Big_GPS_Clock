@@ -20,5 +20,18 @@ Testing diffrent "difusors".
 
 <img src="https://github.com/hindlx/Big_GPS_Clock/blob/master/IMG_0125.JPG">
 
+Printed som digits.
+
+<img src="https://github.com/hindlx/Big_GPS_Clock/blob/master/IMG_0212 (2).JPG">
+
+Led mounting.
+
+<img src="https://github.com/hindlx/Big_GPS_Clock/blob/master/IMG_0213 (2).JPG">
+
+Build.
+
+<img src="https://github.com/hindlx/Big_GPS_Clock/blob/master/IMG_0219 (2).JPG">
+
+
 
 
