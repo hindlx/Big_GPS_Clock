@@ -1,6 +1,5 @@
 # Big_GPS_Clock
 
-Start of an build.
 Building of big clock. GPS syncronisation and MAX7219 7-segment driver.
 
 Uses https://github.com/wayoda/LedControl to drive the 7-segments display.
