@@ -8,7 +8,7 @@ Uses https://github.com/wayoda/LedControl to drive the 7-segments display.
 
 This is the start of the build.
 
-Test I: GPS_Clock.ino file is a POC without any GPS-module and it has been running for several days without any hickups.
+Test I: POC without any GPS-module and it has been running for several days without any hickups.
 
 <img src="https://github.com/hindlx/Big_GPS_Clock/blob/master/IMG_0100.JPG">
 
