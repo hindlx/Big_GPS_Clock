@@ -32,6 +32,10 @@ Build.
 
 <img src="https://github.com/hindlx/Big_GPS_Clock/blob/master/IMG_0219 (2).JPG">
 
+Its alive.
+
+<img src="https://github.com/hindlx/Big_GPS_Clock/blob/master/IMG_0238 (2).JPG">
+
 
 
 
