@@ -5,6 +5,9 @@ Building of big clock. GPS syncronisation and MAX7219 7-segment driver.
 Uses https://github.com/wayoda/LedControl to drive the 7-segments display.
 3D-print of 7-segment display: http://www.thingiverse.com/thing:1028309
 
+For electronics ideas of led driver look at MAX7219 design tip och this blog:
+http://embedded-lab.com/blog/high-voltage-seven-segment-led-display-driver-with-spi-interface/
+
 This is the start of the build.
 
 Test I: POC without any GPS-module and it has been running for several days without any hickups.
